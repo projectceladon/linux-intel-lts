@@ -377,7 +377,7 @@ TRACE_EVENT(i915_gem_shrink,
 		      __entry->dev, __entry->target, __entry->flags)
 );
 
-TRACE_EVENT(i915_vma_bind,
+TRACE_EVENT(i915_vma_bind_end,
 	    TP_PROTO(struct i915_vma *vma, unsigned flags),
 	    TP_ARGS(vma, flags),
 
@@ -401,6 +401,32 @@ TRACE_EVENT(i915_vma_bind,
 		      __entry->obj, __entry->offset, __entry->size,
 		      __entry->flags & PIN_MAPPABLE ? ", mappable" : "",
 		      __entry->vm)
+);
+
+TRACE_EVENT(i915_vma_bind,
+            TP_PROTO(struct i915_vma *vma, unsigned flags),
+            TP_ARGS(vma, flags),
+
+            TP_STRUCT__entry(
+                             __field(struct drm_i915_gem_object *, obj)
+                             __field(struct i915_address_space *, vm)
+                             __field(u64, offset)
+                             __field(u64, size)
+                             __field(unsigned, flags)
+                             ),
+
+            TP_fast_assign(
+                           __entry->obj = vma->obj;
+                           __entry->vm = vma->vm;
+                           __entry->offset = vma->node.start;
+                           __entry->size = vma->node.size;
+                           __entry->flags = flags;
+                           ),
+
+            TP_printk("jf bind end: obj=%p, offset=0x%016llx size=0x%llx%s vm=%p",
+                      __entry->obj, __entry->offset, __entry->size,
+                      __entry->flags & PIN_MAPPABLE ? ", mappable" : "",
+                      __entry->vm)
 );
 
 TRACE_EVENT(i915_vma_unbind,

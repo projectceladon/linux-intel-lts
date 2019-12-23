@@ -1084,8 +1084,8 @@ static void process_csb(struct intel_engine_cs *engine)
 						       INTEL_CONTEXT_SCHEDULE_OUT);
 			i915_request_put(rq);
 
-			GEM_TRACE("%s completed ctx=%d\n",
-				  engine->name, port->context_id);
+			//GEM_TRACE("%s completed ctx=%d\n",
+			//	  engine->name, port->context_id);
 
 			port = execlists_port_complete(execlists, port);
 			if (port_isset(port))
