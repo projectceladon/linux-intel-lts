@@ -331,8 +331,12 @@ int i915_vma_bind(struct i915_vma *vma, enum i915_cache_level cache_level,
 
 	trace_i915_vma_bind(vma, bind_flags);
 	ret = vma->ops->bind_vma(vma, cache_level, bind_flags);
-	if (ret)
+	if (ret) {
+        GEM_TRACE("i915_vma_bind failed\n");
+        trace_i915_vma_bind_end(vma, bind_flags);
 		return ret;
+    }
+	trace_i915_vma_bind_end(vma, bind_flags);
 
 	vma->flags |= bind_flags;
 	return 0;
@@ -1112,6 +1116,7 @@ unpin:
 	if (likely(!vma->vm->closed)) {
 		trace_i915_vma_unbind(vma);
 		vma->ops->unbind_vma(vma);
+        trace_i915_vma_unbind_end(vma);
 	}
 	vma->flags &= ~(I915_VMA_GLOBAL_BIND | I915_VMA_LOCAL_BIND);
 

@@ -199,25 +199,32 @@ static int ppgtt_bind_vma(struct i915_vma *vma,
 	int err;
 
 	if (!(vma->flags & I915_VMA_LOCAL_BIND)) {
+        GEM_TRACE("ppgtt allocate_va_range start\n");
 		err = vma->vm->allocate_va_range(vma->vm,
 						 vma->node.start, vma->size);
-		if (err)
+        GEM_TRACE("ppgtt allocate_va_range end\n");
+		if (err) {
+            GEM_TRACE("allocate_va_range failed\n");
 			return err;
+        }
 	}
 
 	/* Applicable to VLV, and gen8+ */
 	pte_flags = 0;
 	if (i915_gem_object_is_readonly(vma->obj))
 		pte_flags |= PTE_READ_ONLY;
-
+    GEM_TRACE("ppgtt insert_entries start\n");
 	vma->vm->insert_entries(vma->vm, vma, cache_level, pte_flags);
+    GEM_TRACE("ppgtt insert_entries end\n");
 
 	return 0;
 }
 
 static void ppgtt_unbind_vma(struct i915_vma *vma)
 {
+    GEM_TRACE("ppgtt_unbind_vma start\n");
 	vma->vm->clear_range(vma->vm, vma->node.start, vma->size);
+    GEM_TRACE("ppgtt_unbind_vma end\n");
 }
 
 static int ppgtt_set_pages(struct i915_vma *vma)
@@ -2844,7 +2851,9 @@ static int ggtt_bind_vma(struct i915_vma *vma,
 		pte_flags |= PTE_READ_ONLY;
 
 	intel_runtime_pm_get(i915);
+    GEM_TRACE("ggtt insert_entries start\n");
 	vma->vm->insert_entries(vma->vm, vma, cache_level, pte_flags);
+    GEM_TRACE("ggtt insert_entries end\n");
 	intel_runtime_pm_put(i915);
 
 	vma->page_sizes.gtt = I915_GTT_PAGE_SIZE;
@@ -2864,7 +2873,9 @@ static void ggtt_unbind_vma(struct i915_vma *vma)
 	struct drm_i915_private *i915 = vma->vm->i915;
 
 	intel_runtime_pm_get(i915);
+    GEM_TRACE("ggtt_unbind_vma start\n");
 	vma->vm->clear_range(vma->vm, vma->node.start, vma->size);
+    GEM_TRACE("ggtt_unbind_vma end\n");
 	intel_runtime_pm_put(i915);
 }
 

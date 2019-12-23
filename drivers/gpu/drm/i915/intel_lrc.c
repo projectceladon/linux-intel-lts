@@ -500,15 +500,15 @@ static void execlists_submit_ports(struct intel_engine_cs *engine)
 				execlists_context_schedule_in(rq);
 			port_set(&port[n], port_pack(rq, count));
 			desc = execlists_update_context(rq);
-			GEM_DEBUG_EXEC(port[n].context_id = upper_32_bits(desc));
+			//GEM_DEBUG_EXEC(port[n].context_id = upper_32_bits(desc));
 
-			GEM_TRACE("%s in[%d]:  ctx=%d.%d, global=%d (fence %llx:%d) (current %d), prio=%d\n",
-				  engine->name, n,
-				  port[n].context_id, count,
-				  rq->global_seqno,
-				  rq->fence.context, rq->fence.seqno,
-				  intel_engine_get_seqno(engine),
-				  rq_prio(rq));
+			//GEM_TRACE("%s in[%d]:  ctx=%d.%d, global=%d (fence %llx:%d) (current %d), prio=%d\n",
+			//	  engine->name, n,
+			//	  port[n].context_id, count,
+			//	  rq->global_seqno,
+			//	  rq->fence.context, rq->fence.seqno,
+			//	  intel_engine_get_seqno(engine),
+			//	  rq_prio(rq));
 		} else {
 			GEM_BUG_ON(!n);
 			desc = 0;
@@ -1044,17 +1044,17 @@ static void process_csb(struct intel_engine_cs *engine)
 						EXECLISTS_ACTIVE_USER));
 
 		rq = port_unpack(port, &count);
-		GEM_TRACE("%s out[0]: ctx=%d.%d, global=%d (fence %llx:%d) (current %d), prio=%d\n",
-			  engine->name,
-			  port->context_id, count,
-			  rq ? rq->global_seqno : 0,
-			  rq ? rq->fence.context : 0,
-			  rq ? rq->fence.seqno : 0,
-			  intel_engine_get_seqno(engine),
-			  rq ? rq_prio(rq) : 0);
+		//GEM_TRACE("%s out[0]: ctx=%d.%d, global=%d (fence %llx:%d) (current %d), prio=%d\n",
+		//	  engine->name,
+		//	  port->context_id, count,
+		//	  rq ? rq->global_seqno : 0,
+		//	  rq ? rq->fence.context : 0,
+		//	  rq ? rq->fence.seqno : 0,
+		//	  intel_engine_get_seqno(engine),
+		//	  rq ? rq_prio(rq) : 0);
 
 		/* Check the context/desc id for this event matches */
-		GEM_DEBUG_BUG_ON(buf[2 * head + 1] != port->context_id);
+		//GEM_DEBUG_BUG_ON(buf[2 * head + 1] != port->context_id);
 
 		GEM_BUG_ON(count == 0);
 		if (--count == 0) {
@@ -1084,8 +1084,8 @@ static void process_csb(struct intel_engine_cs *engine)
 						       INTEL_CONTEXT_SCHEDULE_OUT);
 			i915_request_put(rq);
 
-			GEM_TRACE("%s completed ctx=%d\n",
-				  engine->name, port->context_id);
+			//GEM_TRACE("%s completed ctx=%d\n",
+			//	  engine->name, port->context_id);
 
 			port = execlists_port_complete(execlists, port);
 			if (port_isset(port))
