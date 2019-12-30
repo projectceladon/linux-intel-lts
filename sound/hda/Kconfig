@@ -28,3 +28,20 @@ config SND_HDA_PREALLOC_SIZE
 
 	  Note that the pre-allocation size can be changed dynamically
 	  via a proc file (/proc/asound/card*/pcm*/sub*/prealloc), too.
+
+config SND_HDA_CODEC_HDMI
+    tristate "Build HDMI/DisplayPort HD-audio codec support"
+    select SND_DYNAMIC_MINORS
+    help
+        Say Y or M here to include HDMI and DisplayPort HD-audio codec
+        support in snd-hda-intel driver.  This includes all AMD/ATI,
+        Intel and Nvidia HDMI/DisplayPort codecs.
+        Note that this option mandatorily enables CONFIG_SND_DYNAMIC_MINORS
+        to assure the multiple streams for DP-MST support.
+
+config HDMI_LPE_AUDIO
+    tristate "HDMI audio without HDaudio on Intel Atom platforms"
+    depends on DRM_I915
+    select SND_PCM
+    help
+        Choose this option to support HDMI LPE Audio mode
